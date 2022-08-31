@@ -184,6 +184,22 @@
     },
     "HelloLambdaEvConf": {
       "Type": "AWS::Lambda::EventInvokeConfig",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "HelloLambdaFunction"
+        },
+        "DestinationConfig": {
+          "OnFailure": {
+            "Destination": "arn:aws:sqs:ap-southeast-2:123456789:some-dlq"
+          }
+        },
+        "Qualifier": "$LATEST",
+        "MaximumEventAgeInSeconds": 1800,
+        "MaximumRetryAttempts": 2
+      }
+    },
+    "HelloLambdaEvConfAlias": {
+      "Type": "AWS::Lambda::EventInvokeConfig",
       "DependsOn": "HelloLambdaFunctionAliasLive",
       "Properties": {
         "FunctionName": {
