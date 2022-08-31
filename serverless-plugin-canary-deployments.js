@@ -133,7 +133,7 @@ class ServerlessCanaryDeployments {
     const aliasTpl = this.buildFunctionAlias({ deploymentSettings, functionName, deploymentGroup })
     const functionAlias = this.getResourceLogicalName(aliasTpl)
     const lambdaPermissions = this.buildPermissionsForAlias({ functionName, functionAlias })
-    const lambdaEventInvokeConfig = this.buildEventInvokeConfigForAlias({ functionName, functionAlias })
+    const lambdaEventInvokeConfig = this.buildEventInvokeConfigForAlias({ functionName, functionAlias, deploymentSettings })
     const eventsWithAlias = this.buildEventsForAlias({ functionName, functionAlias })
 
     return [deploymentGrTpl, aliasTpl, ...lambdaPermissions, ...eventsWithAlias, ...lambdaEventInvokeConfig]
@@ -207,11 +207,12 @@ class ServerlessCanaryDeployments {
     })
   }
 
-  buildEventInvokeConfigForAlias ({ functionName, functionAlias }) {
+  buildEventInvokeConfigForAlias ({ functionName, functionAlias, deploymentSettings }) {
     const eventconfig = this.getEventInvokeConfigFor(functionName)
+    const { alias } = deploymentSettings
     return _.entries(eventconfig).map(([logicalName, template]) => {
       const templateWithAlias = CfGenerators.lambda
-        .replaceEventInvokeConfigQualifierWithAlias(template, functionAlias)
+        .replaceEventInvokeConfigQualifierWithAlias(template, functionAlias, alias)
       return { [logicalName]: templateWithAlias }
     })
   }

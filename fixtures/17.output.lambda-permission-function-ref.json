@@ -184,6 +184,7 @@
     },
     "HelloLambdaEvConf": {
       "Type": "AWS::Lambda::EventInvokeConfig",
+      "DependsOn": "HelloLambdaFunctionAliasLive",
       "Properties": {
         "FunctionName": {
           "Ref": "HelloLambdaFunction"
@@ -193,7 +194,7 @@
             "Destination": "arn:aws:sqs:ap-southeast-2:123456789:some-dlq"
           }
         },
-        "Qualifier": "HelloLambdaFunctionAliasLive",
+        "Qualifier": "Live",
         "MaximumEventAgeInSeconds": 1800,
         "MaximumRetryAttempts": 2
       }
